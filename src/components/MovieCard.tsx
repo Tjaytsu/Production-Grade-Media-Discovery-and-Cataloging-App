@@ -8,14 +8,17 @@ interface Props {
 }
 
 const MovieCard = ({ movie }: Props) => {
-    const releaseYear = movie.release_date ? movie.release_date.split("-")[0] : "N/A";
+  const releaseYear = movie.release_date
+    ? movie.release_date.split("-")[0]
+    : "N/A";
+  const CardRoot: any = (Card as any)?.Root ?? Card;
+
   return (
-    <Card.Root borderRadius={10} overflow="hidden" boxShadow="md">
+    <CardRoot borderRadius={10} overflow="hidden" boxShadow="md" width="100%">
       <Image
         src={getCroppedImageUrl(movie.backdrop_path, "w300")}
         alt={movie.title}
         objectFit="cover"
-        aspectRatio={16 / 9}
         width="100%"
       />
       <CardBody>
@@ -27,7 +30,7 @@ const MovieCard = ({ movie }: Props) => {
         </HStack>
         <Heading fontSize="2xl">{movie.title}</Heading>
       </CardBody>
-    </Card.Root>
+    </CardRoot>
   );
 };
 

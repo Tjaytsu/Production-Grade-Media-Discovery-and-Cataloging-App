@@ -19,22 +19,29 @@ export interface FetchMoviesResponse {
 const useMovies = () => {
      const [movies, setMovies] = useState<Movie[]>([]);
       const [error, setError] = useState("");
+      const [isLoading, setLoading] = useState(true);
     
       useEffect(() => {
 
         const controller = new AbortController();
+        
+        setLoading(true);
 
         apiClient
           .get<FetchMoviesResponse>("/discover/movie", { signal: controller.signal})
-          .then((res) => setMovies(res.data.results))
+          .then((res) => {setMovies(res.data.results);
+          setLoading(false);
+          })
           .catch((error) => {
             if(error instanceof CanceledError) return;
-            setError(error.message)});
+            setError(error.message)
+            setLoading(false);
+          });
 
         return () => controller.abort();
       }, []);
 
-      return {movies, error}
+      return {movies, error, isLoading};
 }
 
 export default useMovies;
