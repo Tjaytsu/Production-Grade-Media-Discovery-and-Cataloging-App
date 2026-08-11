@@ -1,29 +1,8 @@
-import { useEffect, useState } from "react";
-import apiClient from "../services/api-clients";
-
-interface Movie {
-  id: number;
-  title: string;
-}
-
-export interface FetchMoviesResponse {
-  page: number;
-  results: Movie[];
-}
+import useMovies from "../hooks/useMovies";
 
 const MovieGrid = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [error, setError] = useState("");
 
-  useEffect(() => {
-    apiClient
-      .get<FetchMoviesResponse>("/discover/xmovie")
-      .then((res) => setMovies(res.data.results))
-      .catch((error) => {
-        setError(error.message);
-      });
-  }, []);
-
+  const {movies, error} = useMovies()
   return (
     <>
       {error && <text>{error}</text>}
