@@ -8,6 +8,7 @@ function App() {
         base: `"nav" "main"`, // Mobile view
         lg: `"nav nav" "aside main"`, //1024px
       }}
+      templateColumns={{ base: "1fr", lg: "280px 1fr" }}
     >
       <GridItem area="nav">
         <NavBar />

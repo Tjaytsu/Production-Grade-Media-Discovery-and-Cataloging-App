@@ -17,31 +17,47 @@ export interface FetchMoviesResponse {
 }
 
 const useMovies = () => {
-     const [movies, setMovies] = useState<Movie[]>([]);
-      const [error, setError] = useState("");
-      const [isLoading, setLoading] = useState(true);
-    
-      useEffect(() => {
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(true);
 
-        const controller = new AbortController();
-        
-        setLoading(true);
+  useEffect(() => {
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const MIN_LOADING_MS = 500; // keep skeleton visible at least this long
+    const start = Date.now();
 
-        apiClient
-          .get<FetchMoviesResponse>("/discover/movie", { signal: controller.signal})
-          .then((res) => {setMovies(res.data.results);
+    setLoading(true);
+
+    apiClient
+      .get<FetchMoviesResponse>("/discover/movie", { signal: controller.signal })
+      .then((res) => {
+        const applyResult = () => {
+          setMovies(res.data.results);
           setLoading(false);
-          })
-          .catch((error) => {
-            if(error instanceof CanceledError) return;
-            setError(error.message)
-            setLoading(false);
-          });
+        };
+        const elapsed = Date.now() - start;
+        const remaining = Math.max(0, MIN_LOADING_MS - elapsed);
+        timer = setTimeout(applyResult, remaining);
+      })
+      .catch((error) => {
+        if (error instanceof CanceledError) return;
+        const applyError = () => {
+          setError(error.message);
+          setLoading(false);
+        };
+        const elapsed = Date.now() - start;
+        const remaining = Math.max(0, MIN_LOADING_MS - elapsed);
+        timer = setTimeout(applyError, remaining);
+      });
 
-        return () => controller.abort();
-      }, []);
+    return () => {
+      controller.abort();
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
 
-      return {movies, error, isLoading};
-}
+  return { movies, error, isLoading };
+};
 
 export default useMovies;
