@@ -2,6 +2,7 @@ import { SimpleGrid, Text } from "@chakra-ui/react";
 import useMovies from "../hooks/useMovies";
 import MovieCard from "./MovieCard";
 import MovieCardSkeleton from "./MovieCardSkeleton";
+import MovieCardContainer from "./MovieCardContainer";
 
 const MovieGrid = () => {
   console.log("MovieGrid render")
@@ -16,9 +17,15 @@ const MovieGrid = () => {
         gap={10}
       >
         {isLoading &&
-          Skeletons.map((skeleton) => <MovieCardSkeleton key={skeleton} />)}
+          Skeletons.map((skeleton) =>( 
+            <MovieCardContainer>
+          <MovieCardSkeleton key={skeleton} />
+          </MovieCardContainer>
+          ))}
         { !isLoading && movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <MovieCardContainer>
+            <MovieCard key={movie.id} movie={movie} />
+          </MovieCardContainer>
         ))}
       </SimpleGrid>
     </>

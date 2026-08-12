@@ -4,7 +4,7 @@ const MovieCardSkeleton = () => {
   const CardRoot: any = (Card as any)?.Root ?? Card;
 
   return (
-    <CardRoot borderRadius={10} overflow="hidden" boxShadow="sm" width="100%">
+    <CardRoot>
       {/* Matches backdrop 16:9 aspect ratio height */}
       <Skeleton height="160px" width="100%" />
       <CardBody>

@@ -14,7 +14,7 @@ const MovieCard = ({ movie }: Props) => {
   const CardRoot: any = (Card as any)?.Root ?? Card;
 
   return (
-    <CardRoot borderRadius={10} overflow="hidden" boxShadow="md" width="100%">
+    <CardRoot >
       <Image
         src={getCroppedImageUrl(movie.backdrop_path, "w300")}
         alt={movie.title}
