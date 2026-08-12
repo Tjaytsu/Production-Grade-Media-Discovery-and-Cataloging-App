@@ -11,11 +11,7 @@ const MovieGrid = () => {
   return (
     <>
       {error && <Text color="red.500">{error}</Text>}
-      <SimpleGrid
-        columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
-        padding={10}
-        gap={10}
-      >
+      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3, xl: 4 }} padding={10} gap={5}>
         {isLoading &&
           Skeletons.map((skeleton) => (
             <MovieCardContainer key={skeleton}>
