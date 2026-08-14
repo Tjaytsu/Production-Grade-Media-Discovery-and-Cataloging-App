@@ -1,5 +1,6 @@
 import useData from "./UseData";
 import type { Genre } from "./useGenres";
+import type { Provider } from "./usePlatforms";
 
 export interface Movie {
   id: number;
@@ -11,13 +12,23 @@ export interface Movie {
 }
 
 
-const useMovies = (_selectedGenre: Genre | null, _page: number = 1) => {
+const useMovies = (
+  _selectedGenre: Genre | null,
+  _page: number = 1,
+  _selectedProvider: Provider | null = null,
+  _sortOrder: string = "popularity.desc"
+) => {
   const params = {
     ...(!!_selectedGenre?.id && { with_genres: _selectedGenre.id }),
-    sort_by: "popularity.desc",
+    ...(!!_selectedProvider?.provider_id && { with_watch_providers: _selectedProvider.provider_id }),
+    sort_by: _sortOrder,
     page: _page,
   };
-  return useData<Movie>('/discover/movie', { params }, [_selectedGenre?.id, _page]);
+  return useData<Movie>(
+    '/discover/movie',
+    { params },
+    [_selectedGenre?.id, _page, _selectedProvider?.provider_id, _sortOrder]
+  );
 };
 
 export default useMovies;

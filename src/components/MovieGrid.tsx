@@ -4,16 +4,30 @@ import MovieCard from "./MovieCard";
 import MovieCardSkeleton from "./MovieCardSkeleton";
 import MovieCardContainer from "./MovieCardContainer";
 import type { Genre } from "../hooks/useGenres";
+import type { Provider } from "../hooks/usePlatforms";
 
 interface Props {
   selectedGenre: Genre | null;
   currentPage: number;
   onPageChange: (page: number) => void;
+  selectedProvider: Provider | null;
+  sortOrder: string;
 }
 
-const MovieGrid = ({ selectedGenre, currentPage, onPageChange }: Props) => {
+const MovieGrid = ({
+  selectedGenre,
+  currentPage,
+  onPageChange,
+  selectedProvider,
+  sortOrder,
+}: Props) => {
   console.log("MovieGrid render");
-  const { data, error, isLoading } = useMovies(selectedGenre, currentPage);
+  const { data, error, isLoading } = useMovies(
+    selectedGenre,
+    currentPage,
+    selectedProvider,
+    sortOrder,
+  );
   const Skeletons = [1, 2, 3, 4, 5, 6, 7, 8];
   return (
     <>

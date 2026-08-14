@@ -1,13 +1,20 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, HStack } from "@chakra-ui/react";
 import { useState } from "react";
 import NavBar from "./components/NavBar";
 import MovieGrid from "./components/MovieGrid";
 import GenreList from "./components/GenreList";
+import PlatformSelector from "./components/PlatformSelector";
+import SortSelector from "./components/SortSelector";
 import type { Genre } from "./hooks/useGenres";
+import type { Provider } from "./hooks/usePlatforms";
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
+    null,
+  );
+  const [sortOrder, setSortOrder] = useState("popularity.desc");
 
   return (
     <Grid
@@ -34,6 +41,22 @@ function App() {
         />
       </GridItem>
       <GridItem area="main">
+        <Flex gap={5} paddingLeft={10} marginBottom={5}>
+          <PlatformSelector
+            onSelectProvider={(provider) => {
+              setSelectedProvider(provider);
+              setCurrentPage(1);
+            }}
+            selectedProvider={selectedProvider}
+          />
+          <SortSelector
+            onSelectSortOrder={(order) => {
+              setSortOrder(order);
+              setCurrentPage(1);
+            }}
+            sortOrder={sortOrder}
+          />
+        </Flex>
         <MovieGrid
           selectedGenre={selectedGenre}
           currentPage={currentPage}
@@ -41,6 +64,8 @@ function App() {
             setCurrentPage(page);
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
+          selectedProvider={selectedProvider}
+          sortOrder={sortOrder}
         />
       </GridItem>
     </Grid>
