@@ -41,7 +41,7 @@ function App() {
         />
       </GridItem>
       <GridItem area="main">
-        <Flex gap={5} paddingLeft={10} marginBottom={5}>
+        <Flex gap={5} paddingLeft={10} marginBottom={5} marginTop={0.2}>
           <PlatformSelector
             onSelectProvider={(provider) => {
               setSelectedProvider(provider);
