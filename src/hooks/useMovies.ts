@@ -1,6 +1,7 @@
 import useData from "./UseData";
 import type { Genre } from "./useGenres";
 import type { Provider } from "./usePlatforms";
+import type { MovieQuery } from "../interfaces/MovieQuery";
 
 export interface Movie {
   id: number;
@@ -16,18 +17,23 @@ const useMovies = (
   _selectedGenre: Genre | null,
   _page: number = 1,
   _selectedProvider: Provider | null = null,
-  _sortOrder: string = "popularity.desc"
+  _sortOrder: string = "popularity.desc",
+  _movieQuery: MovieQuery = { searchText: "" }
 ) => {
+  const endpoint = _movieQuery.searchText ? '/search/movie' : '/discover/movie';
+  
   const params = {
-    ...(!!_selectedGenre?.id && { with_genres: _selectedGenre.id }),
-    ...(!!_selectedProvider?.provider_id && { with_watch_providers: _selectedProvider.provider_id }),
-    sort_by: _sortOrder,
+    ...(!!_movieQuery.searchText && { query: _movieQuery.searchText }),
+    ...(!!_selectedGenre?.id && !_movieQuery.searchText && { with_genres: _selectedGenre.id }),
+    ...(!!_selectedProvider?.provider_id && !_movieQuery.searchText && { with_watch_providers: _selectedProvider.provider_id }),
+    ...((!_movieQuery.searchText) && { sort_by: _sortOrder }),
     page: _page,
   };
+  
   return useData<Movie>(
-    '/discover/movie',
+    endpoint,
     { params },
-    [_selectedGenre?.id, _page, _selectedProvider?.provider_id, _sortOrder]
+    [_selectedGenre?.id, _page, _selectedProvider?.provider_id, _sortOrder, _movieQuery.searchText]
   );
 };
 

@@ -1,4 +1,4 @@
-import { Flex, Grid, GridItem, HStack } from "@chakra-ui/react";
+import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import { useState } from "react";
 import NavBar from "./components/NavBar";
 import MovieGrid from "./components/MovieGrid";
@@ -7,6 +7,7 @@ import PlatformSelector from "./components/PlatformSelector";
 import SortSelector from "./components/SortSelector";
 import type { Genre } from "./hooks/useGenres";
 import type { Provider } from "./hooks/usePlatforms";
+import type { MovieQuery } from "./interfaces/MovieQuery";
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
@@ -15,6 +16,7 @@ function App() {
     null,
   );
   const [sortOrder, setSortOrder] = useState("popularity.desc");
+  const [movieQuery, setMovieQuery] = useState<MovieQuery>({ searchText: "" });
 
   return (
     <Grid
@@ -25,7 +27,11 @@ function App() {
       templateColumns={{ base: "1fr", lg: "200px 1fr" }}
     >
       <GridItem area="nav">
-        <NavBar />
+        <NavBar
+          onSearch={(searchText) =>
+            setMovieQuery({ ...movieQuery, searchText })
+          }
+        />
       </GridItem>
       <GridItem
         area="aside"
@@ -66,6 +72,7 @@ function App() {
           }}
           selectedProvider={selectedProvider}
           sortOrder={sortOrder}
+          movieQuery={movieQuery}
         />
       </GridItem>
     </Grid>
