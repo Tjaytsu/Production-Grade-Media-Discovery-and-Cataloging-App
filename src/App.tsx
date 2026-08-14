@@ -7,6 +7,7 @@ import type { Genre } from "./hooks/useGenres";
 
 function App() {
   const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <Grid
@@ -25,12 +26,22 @@ function App() {
         paddingX={5}
       >
         <GenreList
-          onSelectGenre={setSelectedGenre}
+          onSelectGenre={(genre) => {
+            setSelectedGenre(genre);
+            setCurrentPage(1);
+          }}
           selectedGenre={selectedGenre}
         />
       </GridItem>
       <GridItem area="main">
-        <MovieGrid />
+        <MovieGrid
+          selectedGenre={selectedGenre}
+          currentPage={currentPage}
+          onPageChange={(page) => {
+            setCurrentPage(page);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
       </GridItem>
     </Grid>
   );

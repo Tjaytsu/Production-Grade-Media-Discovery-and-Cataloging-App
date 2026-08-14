@@ -1,12 +1,19 @@
-import { SimpleGrid, Text } from "@chakra-ui/react";
+import { SimpleGrid, Text, HStack, Button } from "@chakra-ui/react";
 import useMovies from "../hooks/useMovies";
 import MovieCard from "./MovieCard";
 import MovieCardSkeleton from "./MovieCardSkeleton";
 import MovieCardContainer from "./MovieCardContainer";
+import type { Genre } from "../hooks/useGenres";
 
-const MovieGrid = () => {
+interface Props {
+  selectedGenre: Genre | null;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+}
+
+const MovieGrid = ({ selectedGenre, currentPage, onPageChange }: Props) => {
   console.log("MovieGrid render");
-  const { data, error, isLoading } = useMovies();
+  const { data, error, isLoading } = useMovies(selectedGenre, currentPage);
   const Skeletons = [1, 2, 3, 4, 5, 6, 7, 8];
   return (
     <>
@@ -25,6 +32,22 @@ const MovieGrid = () => {
             </MovieCardContainer>
           ))}
       </SimpleGrid>
+
+      <HStack justifyContent="center" gap={4} paddingY={8}>
+        <Button
+          disabled={currentPage === 1}
+          onClick={() => onPageChange(currentPage - 1)}
+        >
+          Previous
+        </Button>
+        <Text>Page {currentPage}</Text>
+        <Button
+          disabled={data.length === 0}
+          onClick={() => onPageChange(currentPage + 1)}
+        >
+          Next
+        </Button>
+      </HStack>
     </>
   );
 };
